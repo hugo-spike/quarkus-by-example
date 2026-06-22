@@ -1,8 +1,8 @@
-package org.htrix;
+package de.schulte.smartbar.backoffice.categories;
 
 import io.quarkus.test.junit.QuarkusIntegrationTest;
 
 @QuarkusIntegrationTest
-class ExampleResourceIT extends ExampleResourceTest {
+class CategoriesResourceIT extends CategoriesResourceTest {
     // Execute the same tests but in packaged mode.
 }
