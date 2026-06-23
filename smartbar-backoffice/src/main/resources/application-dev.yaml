@@ -1,0 +1,9 @@
+quarkus:
+  datasource:
+    username: admin
+    password: admin123
+    jdbc:
+      url: jdbc:postgresql://localhost:5432/appdb
+  hibernate-orm:
+    database:
+      generation: drop-and-create
