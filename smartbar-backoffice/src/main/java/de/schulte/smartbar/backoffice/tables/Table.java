@@ -2,36 +2,22 @@ package de.schulte.smartbar.backoffice.tables;
 
 import de.schulte.smartbar.backoffice.BaseEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
-@jakarta.persistence.Table(name = "Sbo_Table")
+@jakarta.persistence.Table(name = "Sbo_Table", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "name")
+})
 public class Table extends BaseEntity {
 
-    private String name;
-    private Integer seatCount;
-    private Boolean active;
+    @NotNull
+    public String name;
 
-    public String getName() {
-        return name;
-    }
+    @NotNull
+    public Integer seatCount;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    @NotNull
+    public Boolean active;
 
-    public Integer getSeatCount() {
-        return seatCount;
-    }
-
-    public void setSeatCount(Integer seatCount) {
-        this.seatCount = seatCount;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
 }

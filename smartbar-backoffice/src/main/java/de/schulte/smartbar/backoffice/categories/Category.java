@@ -1,28 +1,28 @@
 package de.schulte.smartbar.backoffice.categories;
 
 import de.schulte.smartbar.backoffice.BaseEntity;
-import jakarta.persistence.Entity;
+import de.schulte.smartbar.backoffice.MasterDataService;
+import jakarta.enterprise.inject.spi.CDI;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = "name")
+})
 public class Category extends BaseEntity {
 
-    private String name;
+    @NotNull
+    public String name;
 
-    private String description;
+    @NotNull
+    public String description;
 
-    public String getName() {
-        return name;
+    @PostPersist
+    @PostUpdate
+    @PostRemove
+    public void fireChangedEvent() {
+        CDI.current().select(MasterDataService.class).get().fireChangedEvent(this);
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

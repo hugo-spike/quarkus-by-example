@@ -1,63 +1,50 @@
 package de.schulte.smartbar.backoffice.articles;
 
 import de.schulte.smartbar.backoffice.BaseEntity;
+import de.schulte.smartbar.backoffice.MasterDataService;
 import de.schulte.smartbar.backoffice.categories.Category;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
+import jakarta.enterprise.inject.spi.CDI;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"name", "category_id"})
+})
+@NamedQuery(name = "Article.byCategory", query = "from Article where category.id = :id order by price desc")
+@NamedQuery(name = "Article.nameContaining", query = "from Article where name like concat('%', concat(?1, '%'))")
 public class Article extends BaseEntity {
 
-    private String name;
+    @NotNull
+    public String name;
 
-    private BigDecimal price;
+    @NotNull
+    @Positive
+    public BigDecimal price;
 
-    private String description;
+    @NotNull
+    public String description;
 
-    private String pictureBase64;
+    @NotNull
+    public String pictureBase64;
 
-    @ManyToOne
-    private Category category;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "category_id")
+    public Category category;
 
-    public String getName() {
-        return name;
+    public Integer timesOrdered;
+
+    public LocalDate lastOrdered;
+
+    @PostPersist
+    @PostUpdate
+    @PostRemove
+    public void fireChangedEvent() {
+        CDI.current().select(MasterDataService.class).get().fireChangedEvent(this);
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getPictureBase64() {
-        return pictureBase64;
-    }
-
-    public void setPictureBase64(String pictureBase64) {
-        this.pictureBase64 = pictureBase64;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
 }
